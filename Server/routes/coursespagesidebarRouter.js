@@ -17,17 +17,28 @@ coursespagesidebarRouter.route('/')
     })
     .catch(err => next(err));
 })
-.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
-    res.statusCode = 403;
-    res.end('POST operation not supported on /partners');
+.post(cors.cors, (req, res, next) => {
+    Coursespagesidebar.create(req.body)
+    .then(sidebar => {
+        console.log('Sidebar item created Created ', sidebar);
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(sidebar);
+    })
+    .catch(err => next(err));
 })
 .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /partners');
 })
-.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
-    res.statusCode = 403;
-    res.end('DELETE operation not supported on /partners');
+.delete((req, res, next) => {
+    Coursespagesidebar.deleteMany()
+    .then(response => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(response);
+    })
+    .catch(err => next(err));
 });
 
 module.exports = coursespagesidebarRouter;

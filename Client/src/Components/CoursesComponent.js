@@ -72,7 +72,7 @@ class RenderSidebar extends Component{
         return (
             <React.Fragment>
             <div className="col-12"><strong>{filter.name}</strong></div>
-                {this.createCheckboxes(filter.checkboxes)}
+                {this.createCheckboxes(filter.Checkboxes)}
             </React.Fragment>
         )
         });

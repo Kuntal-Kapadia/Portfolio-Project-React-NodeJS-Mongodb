@@ -1,7 +1,8 @@
 import React, {Component } from 'react';
 import { Button, Label,  Col, Row  } from 'reactstrap';
 import { Control, Form, Errors} from 'react-redux-form';
-// import FacebookLogin from 'react-facebook-login';
+import FacebookLogin from 'react-facebook-login';
+import GoogleLogin from 'react-google-login';
 
 
 const required = val => val && val.length;
@@ -37,9 +38,15 @@ class Register extends Component{
             this.props.resetRegistrationForm();
         }
    render(){ 
-    // const responseFacebook = (response) => {
-    //     console.log(response);
-    //   }
+    const responseFacebook = (response) => {
+        console.log(response);
+        alert(response.name);
+        alert(response.picture)
+      }
+      const responseGoogle = (response) => {
+        console.log(response);
+        alert(response.rt.Ad)
+      }
     return (
         <React.Fragment>
             <div className="container-fluid">
@@ -166,16 +173,9 @@ class Register extends Component{
                             </Row>
                             <Row className="form-group">
                                 <Col>
-                                    <Button className= "formbutton btn-large btn-block facebook-btn" type="submit" color="primary">
-                                    <i class="fa fa-facebook mr-2"></i>Sign up with Facebook
-                                    </Button>
-                                </Col>
-                            </Row>
-                            {/* <Row className="form-group">
-                                <Col>
                                     <FacebookLogin
                                         appId="823721018162478"
-                                        autoLoad={true}
+                                        // autoLoad={true}
                                         fields="name,email,picture"
                                         callback={responseFacebook}
                                         cssClass="formbutton btn-large btn-block facebook-btn"
@@ -183,14 +183,23 @@ class Register extends Component{
                                         textButton="Sign Up with Facebook"
                                     />
                                 </Col>
-                            </Row> */}
+                            </Row>
                             <Row className="form-group">
                                 <Col>
-                                    <Button className= "formbutton btn-large btn-block google-btn" type="submit" color="primary">
-                                    <i class="fa fa-google mr-2"></i>Sign up with Google
-                                    </Button>
+                                    <GoogleLogin
+                                    clientId="271449462488-rgj32p6je2trachgcn2aidh08h2dt1as.apps.googleusercontent.com"
+                                    render={renderProps => (
+                                    <Button className= "formbutton btn-large btn-block google-btn" type="submit" color="primary" 
+                                    onClick={renderProps.onClick} disabled={renderProps.disabled}><i class="fa fa-google mr-2"></i>Sign Up with Google</Button>
+                                    )}
+                                    buttonText="Login"
+                                    onSuccess={responseGoogle}
+                                    onFailure={responseGoogle}
+                                    // cookiePolicy={'single_host_origin'}
+                                    />
                                 </Col>
                             </Row>
+                            
                     </Form>    
                     </div>
                     </div>

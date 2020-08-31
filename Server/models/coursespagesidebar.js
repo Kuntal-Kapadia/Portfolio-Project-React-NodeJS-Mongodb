@@ -7,8 +7,8 @@ const coursespagesidebarSchema = new Schema({
         type: String,
         required: true
     },
-    Checkboxes: {
-        type: [String],
+    Checkboxes:{
+        type:[String],
         required: true
     }
 }, {
