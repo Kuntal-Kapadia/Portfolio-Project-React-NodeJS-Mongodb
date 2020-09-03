@@ -26,6 +26,7 @@ const coursespageRouter = require('./routes/coursespageRouter');
 const coursespagesidebarRouter = require('./routes/coursespagesidebarRouter');
 const coursespagesearchresultsRouter = require('./routes/coursespagesearchresultsRouter');
 
+
 const mongoose = require('mongoose');
 
 const url = config.mongoUrl;
@@ -86,6 +87,8 @@ app.use('/coursespage', coursespageRouter);
 app.use('/registerpage', registerpageRouter);
 app.use('/coursespagesearchresults', coursespagesearchresultsRouter);
 app.use('/coursespagesidebar', coursespagesidebarRouter);
+app.use('/favorites', favoriteRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

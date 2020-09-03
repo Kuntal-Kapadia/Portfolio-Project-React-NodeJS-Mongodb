@@ -57,6 +57,8 @@ exports.facebookPassport = passport.use(
             clientSecret: config.facebook.clientSecret
         },
         (accessToken, refreshToken, profile, done) => {
+            console.log("In local strategy")
+            console.log(profile.id)
             User.findOne({facebookId: profile.id}, (err, user) => {
                 if (err) {
                     return done(err, false);
@@ -72,6 +74,7 @@ exports.facebookPassport = passport.use(
                         if (err) {
                             return done(err, false);
                         } else {
+                            console.log(user)
                             return done(null, user);
                         }
                     });

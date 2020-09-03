@@ -32,6 +32,7 @@ const coursespagesearchresultsSchema = new Schema({
         required: true
     }
 }, {
+    collection: 'coursespagesearchresults',
     timestamps: true
 });
 

@@ -75,6 +75,18 @@ Button{
   font-weight: 600;
   cursor: pointer;
 }
+.nav-link-favorites{ 
+  color:red; 
+  text-shadow: 1px 1px black;
+  font-weight: 600;
+  cursor: pointer;
+}
+.nav-link-list{ 
+  color:black; 
+  text-shadow: 1px 1px black;
+  font-weight: 600;
+  cursor: pointer;
+}
 
 .NavbarBrand{
   width: 136px;
@@ -129,6 +141,10 @@ Button{
 
 .dropdown-item {
     color : black;
+}
+
+.modalFormat{
+  background-color:#7eb444;
 }
 .site-footer {
   background-color:#7eb444 ;

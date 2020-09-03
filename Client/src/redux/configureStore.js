@@ -11,6 +11,9 @@ import { Registerpage } from './registerpage';
 import { Coursespage } from './coursespage';
 import { Coursespagesidebar } from './coursespagesidebar';
 import { Coursespagesearchresults } from './coursespagesearchresults';
+import { Partners } from './partners';
+import { Auth } from './auth';
+import { favorites } from './favorites';
 import { InitialRegistrationForm } from './forms';
 import thunk from 'redux-thunk';
 // import logger from 'redux-logger';
@@ -29,7 +32,10 @@ export const ConfigureStore = () => {
             registerpage:Registerpage, 
             coursespage:Coursespage, 
             coursespagesidebar:Coursespagesidebar, 
-            coursespagesearchresults:Coursespagesearchresults, 
+            coursespagesearchresults:Coursespagesearchresults,
+            partners: Partners,
+            favorites:favorites,
+            auth: Auth, 
             ...createForms({
                 registrationForm: InitialRegistrationForm 
             })

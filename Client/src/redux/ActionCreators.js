@@ -427,7 +427,7 @@ export const postRegistration = (firstname, lastname, username, password) => dis
     };
         // newRegistration.date = new Date().toISOString();
      
-    return fetch(baseUrl + 'users/signup', {
+        return fetch(baseUrl + 'users/signup', {
             method: "POST",
             body: JSON.stringify(newRegistration),
             headers: {
@@ -456,3 +456,281 @@ export const postRegistration = (firstname, lastname, username, password) => dis
         });
 };
 
+
+//LOGIN
+export const requestLogin = creds => {
+    return {
+        type: ActionTypes.LOGIN_REQUEST,
+        creds
+    }
+}
+  
+export const receiveLogin = response => {
+    return {
+        type: ActionTypes.LOGIN_SUCCESS,
+        token: response.token
+    }
+}
+  
+export const loginError = message => {
+    return {
+        type: ActionTypes.LOGIN_FAILURE,
+        message
+    }
+}
+
+export const loginUser = creds => dispatch => {
+    // We dispatch requestLogin to kickoff the call to the API
+    dispatch(requestLogin(creds))
+
+    return fetch(baseUrl + 'users/login', {
+        method: 'POST',
+        headers: { 
+            'Content-Type':'application/json' 
+        },
+        body: JSON.stringify(creds)
+    })
+    .then(response => {
+            if (response.ok) {
+                return response;
+            } else {
+                const error = new Error(`Error ${response.status}: ${response.statusText}`);
+                error.response = response;
+                throw error;
+            }
+        },
+        error => { throw error; }
+    )
+    .then(response => response.json())
+    .then(response => {
+        if (response.success) {
+            // If login was successful, set the token in local storage
+            localStorage.setItem('token', response.token);
+            localStorage.setItem('creds', JSON.stringify(creds));
+
+            // Dispatch the success action
+            dispatch(fetchFavorites());
+            dispatch(receiveLogin(response));
+        } else {
+            const error = new Error('Error ' + response.status);
+            error.response = response;
+            throw error;
+        }
+    })
+    .catch(error => dispatch(loginError(error.message)))
+};
+
+export const loginfbUser = (access_token, creds) => dispatch => {
+    // We dispatch requestLogin to kickoff the call to the API
+      dispatch(requestLogin(creds))
+    
+    console.log("In loginfbuser")
+    // alert(access_token)
+    console.log(access_token)
+    return fetch(baseUrl + 'users/facebook/token', {
+        method: 'GET',
+        headers: { 
+            "access_token" : access_token
+        },
+    })
+    .then(response => {
+            if (response.ok) {
+                console.log(response)
+                return response;
+            } else {
+                console.log(response)
+                const error = new Error(`Error ${response.status}: ${response.statusText}`);
+                error.response = response;
+                throw error;
+            }
+        },
+        error => { throw error; }
+    )
+    .then(response => response.json())
+    .then(response => {
+        console.log(response);
+        if (response.success) {
+            // If login was successful, set the token in local storage
+            console.log("SUCCESS")
+            console.log(response.token);
+            localStorage.setItem('token', response.token);
+            localStorage.setItem('creds', JSON.stringify({username:response.username, password:response.username}));
+            console.log("In Loginuser")
+            console.log(localStorage)
+            // Dispatch the success action
+            dispatch(fetchFavorites());
+            dispatch(receiveLogin(response));
+        } else {
+            const error = new Error('Error ' + response.status);
+            error.response = response;
+            throw error;
+        }
+    })
+    .catch(error => dispatch(loginError(error.message)))
+};
+
+
+export const requestLogout = () => {
+    return {
+      type: ActionTypes.LOGOUT_REQUEST
+    }
+}
+  
+export const receiveLogout = () => {
+    return {
+      type: ActionTypes.LOGOUT_SUCCESS
+    }
+}
+
+// Logs the user out
+export const logoutUser = () => (dispatch) => {
+    dispatch(requestLogout())
+    localStorage.removeItem('token');
+    localStorage.removeItem('creds');
+    dispatch(favoritesFailed("Error 401: Unauthorized"));
+    dispatch(receiveLogout())
+}
+
+export const postFavorite = coursespagesearchresultId => dispatch => {
+
+    const bearer = 'Bearer ' + localStorage.getItem('token');
+
+    return fetch(baseUrl + 'favorites/' + coursespagesearchresultId, {
+        method: "POST",
+        headers: {
+          "Authorization": bearer
+        },
+        credentials: "same-origin"
+    })
+    .then(response => {
+            if (response.ok) {
+                return response;
+            } else {
+                const error = new Error(`Error ${response.status}: ${response.statusText}`);
+                error.response = response;
+                throw error;
+            }
+        },
+        error => { throw error; }
+    )
+    .then(response => response.json())
+    .then(favorites => {
+        console.log('Favorite Added', favorites);
+        dispatch(addFavorites(favorites));
+    })
+    .catch(error => dispatch(favoritesFailed(error.message)));
+}
+
+export const deleteFavorite = coursespagesearchresultId => dispatch => {
+
+    const bearer = 'Bearer ' + localStorage.getItem('token');
+
+    return fetch(baseUrl + 'favorites/' + coursespagesearchresultId, {
+        method: "DELETE",
+        headers: {
+            'Authorization': bearer
+        },
+        credentials: "same-origin"
+    })
+    .then(response => {
+            if (response.ok) {
+                return response;
+            } else {
+                const error = new Error(`Error ${response.status}: ${response.statusText}`);
+                error.response = response;
+                throw error;
+            }
+        },
+        error => { throw error; }
+    )
+    .then(response => response.json())
+    .then(favorites => {
+        console.log('Favorite Deleted', favorites);
+        dispatch(addFavorites(favorites));
+    })
+    .catch(error => dispatch(favoritesFailed(error.message)));
+};
+
+export const fetchFavorites = () => dispatch => {
+    dispatch(favoritesLoading());
+
+    const bearer = 'Bearer ' + localStorage.getItem('token');
+
+    return fetch(baseUrl + 'favorites', {
+        headers: {
+            'Authorization': bearer
+        },
+    })
+    .then(response => {
+            if (response.ok) {
+                console.log(response)
+                return response;
+            } else {
+                const error = new Error(`Error ${response.status}: ${response.statusText}`);
+                error.response = response;
+                throw error;
+            }
+        },
+        error => { throw error; }
+    )
+    .then(response => response.json())
+    .then(favorites => dispatch(addFavorites(favorites)))
+    .catch(error => dispatch(favoritesFailed(error.message)));
+}
+
+export const favoritesLoading = () => ({
+    type: ActionTypes.FAVORITES_LOADING
+});
+
+export const favoritesFailed = errMess => ({
+    type: ActionTypes.FAVORITES_FAILED,
+    payload: errMess
+});
+
+export const addFavorites = favorites => ({
+    type: ActionTypes.ADD_FAVORITES,
+    payload: favorites
+});
+
+export const fetchPartners = () => (dispatch) => {  
+    dispatch(partnersLoading());
+    
+    const bearer = 'Bearer ' + localStorage.getItem('token');
+
+    return fetch(baseUrl + 'partners', {
+        headers: {
+            'Authorization': bearer
+        },
+    })
+    .then(response => {
+                if (response.ok) {
+                    return response;
+                } else {
+                    const error = new Error(`Error ${response.status}: ${response.statusText}`);
+                    error.response = response;
+                    throw error;
+                }
+            },
+            error => {
+                const errMess = new Error(error.message);
+                throw errMess;
+            }
+        )
+        .then(response => response.json())
+        .then(partners => dispatch(addPartners(partners)))
+        .catch(error => dispatch(partnersFailed(error.message)));
+};
+
+export const partnersLoading = () => ({
+    type: ActionTypes.PARTNERS_LOADING
+});
+
+export const partnersFailed = errMess => ({
+    type: ActionTypes.PARTNERS_FAILED,
+    payload: errMess
+});
+
+export const addPartners = partners => ({
+    type: ActionTypes.ADD_PARTNERS,
+    payload: partners
+});

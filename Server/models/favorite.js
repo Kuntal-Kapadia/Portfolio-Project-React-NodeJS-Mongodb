@@ -6,9 +6,9 @@ const favoriteSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    campsites: [{
+    courses: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Campsite'
+        ref: 'Coursespagesearchresults'
     }]
 }, {
     timestamps: true

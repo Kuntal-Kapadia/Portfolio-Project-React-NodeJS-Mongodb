@@ -19,15 +19,15 @@ coursespagesearchresultsRouter.route('/')
 })
 .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
-    res.end('POST operation not supported on /partners');
+    res.end('POST operation not supported');
 })
 .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res) => {
     res.statusCode = 403;
-    res.end('PUT operation not supported on /partners');
+    res.end('PUT operation not supported');
 })
 .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
-    res.end('DELETE operation not supported on /partners');
+    res.end('DELETE operation not supported');
 });
 
 module.exports = coursespagesearchresultsRouter;

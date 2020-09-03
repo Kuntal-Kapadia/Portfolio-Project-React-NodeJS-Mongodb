@@ -17,7 +17,7 @@ coursespagesidebarRouter.route('/')
     })
     .catch(err => next(err));
 })
-.post(cors.cors, (req, res, next) => {
+.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Coursespagesidebar.create(req.body)
     .then(sidebar => {
         console.log('Sidebar item created Created ', sidebar);
@@ -29,9 +29,9 @@ coursespagesidebarRouter.route('/')
 })
 .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res) => {
     res.statusCode = 403;
-    res.end('PUT operation not supported on /partners');
+    res.end('PUT operation not supported');
 })
-.delete((req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin,(req, res, next) => {
     Coursespagesidebar.deleteMany()
     .then(response => {
         res.statusCode = 200;

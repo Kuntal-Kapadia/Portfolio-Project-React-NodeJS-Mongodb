@@ -52,6 +52,7 @@ router.post('/signup', cors.corsWithOptions, (req, res) => {
     );
 });
 
+
 router.post('/login', cors.corsWithOptions, (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if (err) {
@@ -90,11 +91,13 @@ router.get('/logout', cors.corsWithOptions, (req, res, next) => {
 });
 
 router.get('/facebook/token', passport.authenticate('facebook-token'), (req, res) => {
+    console.log("in Router");
+    console.log(req);
     if (req.user) {
         const token = authenticate.getToken({_id: req.user._id});
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json({success: true, token: token, status: 'You are successfully logged in!'});
+        res.json({success: true, token: token, username:req.user.username, status: 'You are successfully logged in!'});
     }
 });
 

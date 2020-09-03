@@ -1,9 +1,9 @@
 import React, {Component } from 'react';
 import { Button, Label,  Col, Row  } from 'reactstrap';
 import { Control, Form, Errors} from 'react-redux-form';
+import { useHistory, withRouter } from "react-router-dom";
 import FacebookLogin from 'react-facebook-login';
 import GoogleLogin from 'react-google-login';
-
 
 const required = val => val && val.length;
 const maxLength = len => val => !val || (val.length <= len);
@@ -33,9 +33,20 @@ class Register extends Component{
     
      
         handleSubmit(values) {
-          
+
+            alert("in handleSubmit");
+            
             this.props.postRegistration(values.firstname,values.lastname,values.username,values.password);
-            this.props.resetRegistrationForm();
+
+            alert(values.username)
+            alert(values.password)
+
+            this.props.loginUser({username: values.username, password: values.password});
+
+
+            this.props.history.push("/home")
+
+            // this.props.resetRegistrationForm();
         }
    render(){ 
     const responseFacebook = (response) => {
@@ -171,7 +182,7 @@ class Register extends Component{
                                     </Button>
                                 </Col>
                             </Row>
-                            <Row className="form-group">
+                            {/* <Row className="form-group">
                                 <Col>
                                     <FacebookLogin
                                         appId="823721018162478"
@@ -199,7 +210,7 @@ class Register extends Component{
                                     />
                                 </Col>
                             </Row>
-                            
+                             */}
                     </Form>    
                     </div>
                     </div>
@@ -212,4 +223,4 @@ class Register extends Component{
 }
 
 
-export default Register;
+export default withRouter(Register);
